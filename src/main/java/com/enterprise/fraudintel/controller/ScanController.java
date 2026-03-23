@@ -30,14 +30,48 @@ public class ScanController {
     public Map<String, Object> runScan(@RequestBody Map<String, String> request, Principal principal) {
         String content = request.get("content");
         
-        // Mock analysis logic
-        Random random = new Random();
-        double riskScore = 15 + (85 * random.nextDouble());
-        String riskLevel = riskScore > 75 ? "HIGH" : (riskScore > 40 ? "MEDIUM" : "LOW");
-        
-        // Social Media Sentiment logic
-        String[] sentiments = {"Positive", "Neutral", "Negative", "Highly Suspicious"};
-        String sentiment = sentiments[random.nextInt(sentiments.length)];
+        String riskLevel;
+        double riskScore;
+        String sentiment;
+        String summary;
+
+        if (content == null || content.trim().isEmpty()) {
+            riskLevel = "LOW";
+            riskScore = 0.0;
+            sentiment = "Neutral";
+            summary = "Empty payload provided.";
+        } else {
+            String url = content.trim().toLowerCase();
+            
+            // 1. Check if URL starts with https
+            if (!url.startsWith("https")) {
+                riskLevel = "HIGH";
+                riskScore = 95.0;
+                sentiment = "Highly Suspicious";
+                summary = "URL does not use secure HTTPS. Flagged as HIGH RISK.";
+            } 
+            // 2. Check length (>50 chars) or multiple hyphens
+            else if (url.length() > 50 || url.split("-").length - 1 > 1) {
+                riskLevel = "MEDIUM"; // Considered SUSPICIOUS
+                riskScore = 65.0;
+                sentiment = "Negative";
+                summary = "URL is excessively long or contains multiple hyphens. Flagged as SUSPICIOUS.";
+            } 
+            // 3. Known clean domains
+            else if (url.contains("google.com") || url.contains("railway.app")) {
+                riskLevel = "LOW";
+                riskScore = 5.0;
+                sentiment = "Positive";
+                summary = "Domain matches known safe entity. Marked as TRUSTED.";
+            } 
+            // 4. Default fallback
+            else {
+                riskLevel = "LOW";
+                riskScore = 20.0;
+                sentiment = "Neutral";
+                summary = "Standard URL verified. No immediate threats detected.";
+            }
+        }
         
         // Persist Result
         ScanResult result = new ScanResult();
@@ -51,7 +85,7 @@ public class ScanController {
         AuditLog log = new AuditLog();
         log.setAction("SCAN_PERFORMED");
         log.setPerformedBy(principal != null ? principal.getName() : "Anonymous");
-        log.setDetails("Scanned payload: " + (content != null && content.length() > 30 ? content.substring(0, 30) + "..." : content));
+        log.setDetails("Scanned URL: " + (content != null && content.length() > 30 ? content.substring(0, 30) + "..." : content));
         auditLogRepository.save(log);
         
         Map<String, Object> response = new HashMap<>();
@@ -59,7 +93,7 @@ public class ScanController {
         response.put("riskScore", riskScore);
         response.put("riskLevel", riskLevel);
         response.put("sentiment", sentiment);
-        response.put("summary", "Analysis complete for payload. Risk detected: " + riskLevel);
+        response.put("summary", summary);
         
         return response;
     }
