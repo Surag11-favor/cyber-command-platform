@@ -3,87 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Authorized Users | Fraud Intelligence</title>
+    <title>Authorized Access | Cyber-Command</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/cyber-command.css}">
     <style>
-        :root {
-            --bg-dark: #0f172a;
-            --sidebar-bg: #1e293b;
-            --accent-blue: #3b82f6;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.08);
+        .avatar-circle {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--cyber-blue), #0ea5e9);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 4px 12px var(--cyber-blue-glow);
         }
-        body { background-color: var(--bg-dark); color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; display: flex; }
-        .sidebar { width: 280px; background: var(--sidebar-bg); border-right: 1px solid var(--glass-border); position: fixed; height: 100vh; }
-        .main-content { margin-left: 280px; flex-grow: 1; padding: 2rem; }
-        .nav-link { display: flex; align-items: center; padding: 0.8rem 1.2rem; color: var(--text-muted) !important; border-radius: 12px; margin-bottom: 0.5rem; transition: all 0.3s; text-decoration: none; }
-        .nav-link:hover, .nav-link.active { background: rgba(59, 130, 246, 0.1); color: #fff !important; }
-        .nav-link.active { background: var(--accent-blue); color: #fff !important; }
-        .glass-panel { background: var(--card-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2rem; }
-        .user-avatar { width: 40px; height: 40px; background: var(--accent-blue); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; }
-        .table { color: var(--text-main); }
-        .table td { border-bottom: 1px solid var(--glass-border); vertical-align: middle; padding: 1.25rem 0.5rem; }
+        .user-row {
+            transition: all 0.3s;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .user-row:hover {
+            background: rgba(255,255,255,0.02);
+        }
+        .modal-content {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+        }
     </style>
 </head>
 <body>
-    <aside class="sidebar">
-        <div class="p-4 border-bottom border-secondary mb-3">
+    <aside class="cyber-sidebar">
+        <div class="p-4 border-bottom border-secondary border-opacity-25 mb-3">
             <a href="/dashboard" class="text-white text-decoration-none fw-800 d-flex align-items-center">
-                <i class="bi bi-shield-lock-fill me-2 text-primary"></i> FRAUD INTEL
+                <i class="bi bi-shield-lock-fill me-2 fs-4 text-primary"></i> 
+                <span>FRAUD <span class="text-primary text-opacity-75">INTEL</span></span>
             </a>
         </div>
-        <nav class="px-3">
-            <a href="/dashboard" class="nav-link"><i class="bi bi-grid-fill me-2"></i> Overview</a>
-            <a href="/threat-scan" class="nav-link"><i class="bi bi-eye-fill me-2"></i> Threat Scan</a>
-            <a href="/mitigation-rules" class="nav-link"><i class="bi bi-shield-shaded me-2"></i> Mitigation Rules</a>
-            <a href="/authorized-users" class="nav-link active"><i class="bi bi-people-fill me-2"></i> Authorized Users</a>
-            <a href="/audit-logs" class="nav-link"><i class="bi bi-journal-text me-2"></i> Audit Logs</a>
+        <nav class="px-2">
+            <a href="/dashboard" class="nav-link-cyber"><i class="bi bi-grid-fill me-3"></i> Overview</a>
+            <a href="/threat-scan" class="nav-link-cyber"><i class="bi bi-eye-fill me-3"></i> Threat Scan</a>
+            <a href="/mitigation-rules" class="nav-link-cyber"><i class="bi bi-shield-shaded me-3"></i> Mitigation Rules</a>
+            <a href="/authorized-users" class="nav-link-cyber active"><i class="bi bi-people-fill me-3"></i> Authorized Users</a>
+            <a href="/audit-logs" class="nav-link-cyber"><i class="bi bi-journal-text me-3"></i> Audit Logs</a>
         </nav>
     </aside>
 
-    <main class="main-content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+    <main class="main-content" style="margin-left: 280px; padding: 2.5rem; flex-grow: 1;">
+        <div class="d-flex justify-content-between align-items-center mb-5">
             <div>
-                <h2 class="fw-800">Investigator Access Control</h2>
-                <p class="text-muted">Manage system administrators and authorized analysts.</p>
+                <h2 class="fw-800 mb-1">Access Orchestration</h2>
+                <p class="text-muted small mb-0">Manage high-clearance investigators and system analysts.</p>
             </div>
-            <button class="btn btn-outline-light rounded-pill px-4 fw-bold"><i class="bi bi-person-plus-fill me-2"></i> Invite User</button>
+            <button class="btn btn-primary rounded-pill px-4 fw-bold shadow-lg" data-bs-toggle="modal" data-bs-target="#inviteUserModal">
+                <i class="bi bi-person-plus-fill me-2"></i> AUTHORIZE INVESTIGATOR
+            </button>
         </div>
 
-        <div class="glass-panel">
-            <table class="table">
-                <thead>
-                    <tr class="text-muted small uppercase">
-                        <th>User</th>
-                        <th>Role</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
+        <div class="glass-card">
+            <div class="d-flex align-items-center mb-4">
+                <i class="bi bi-people text-primary me-2 fs-4"></i>
+                <h5 class="mb-0 fw-700">Clearance Registry</h5>
+            </div>
+
+            <div class="table-responsive">
+                <table class="cyber-table">
+                    <thead>
+                        <tr>
+                            <th>Investigator</th>
+                            <th>Designation</th>
+                            <th>Status</th>
+                            <th>Orchestration</th>
+                        </tr>
+                    </thead>
                     <tbody>
-                        <tr th:each="user : ${users}" th:id="'user-' + ${user.id}">
+                        <tr th:each="user : ${users}" th:id="'user-' + ${user.id}" class="user-row">
                             <td>
                                 <div class="d-flex align-items-center">
                                     <div class="avatar-circle me-3" th:text="${#strings.substring(user.username, 0, 1).toUpperCase()}">A</div>
-                                    <div class="fw-600" th:text="${user.username}">admin_user</div>
+                                    <div>
+                                        <div class="fw-700 text-white" th:text="${user.username}">admin_user</div>
+                                        <div class="text-muted small" th:text="${user.email}">admin@enterprise.com</div>
+                                    </div>
                                 </div>
                             </td>
-                            <td><span class="badge bg-primary-subtle text-primary rounded-pill px-3" th:text="${user.role}">ADMIN</span></td>
-                            <td class="text-muted small">Active</td>
+                            <td>
+                                <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary px-3 fw-bold" th:text="${user.role}">ADMIN</span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-circle bg-success pulse-emerald" style="width: 8px; height: 8px;"></div>
+                                    <span class="small text-success fw-bold">ENCRYPTED</span>
+                                </div>
+                            </td>
                             <td>
                                 <div class="dropdown">
-                                    <button class="btn btn-link text-white-50 p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bi bi-three-dots-vertical"></i>
+                                    <button class="btn btn-link text-white-50 p-0 border-0" type="button" data-bs-toggle="dropdown">
+                                        <i class="bi bi-three-dots-vertical fs-5"></i>
                                     </button>
-                                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow border-secondary">
-                                        <li><a class="dropdown-item small" href="#"><i class="bi bi-pencil me-2"></i> Edit Details</a></li>
-                                        <li><a class="dropdown-item small" href="#"><i class="bi bi-shield-lock me-2"></i> Reset Password</a></li>
-                                        <li><hr class="dropdown-divider border-secondary"></li>
-                                        <li><a class="dropdown-item small text-danger" href="#" th:onclick="'deleteUser(' + ${user.id} + ')'"><i class="bi bi-person-x me-2"></i> Remove Investigator</a></li>
+                                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow border-secondary border-opacity-25 rounded-4 p-2">
+                                        <li><a class="dropdown-item rounded-3 mb-1" href="#"><i class="bi bi-key me-2"></i> Rotate Credentials</a></li>
+                                        <li><a class="dropdown-item rounded-3 mb-1" href="#"><i class="bi bi-pencil-square me-2"></i> Update Clearance</a></li>
+                                        <li><hr class="dropdown-divider border-secondary border-opacity-25"></li>
+                                        <li><a class="dropdown-item rounded-3 text-danger fw-bold" href="#" th:onclick="'deleteUser(' + ${user.id} + ')'"><i class="bi bi-shield-x me-2"></i> REVOKE ACCESS</a></li>
                                     </ul>
                                 </div>
                             </td>
@@ -95,93 +121,74 @@
     </main>
 
     <!-- Invite User Modal -->
-    <div class="modal fade" id="inviteUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="inviteUserModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content bg-dark text-white border-secondary">
-                <div class="modal-header border-secondary">
-                    <h5 class="modal-title fw-bold">Invite New Investigator</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content">
+                <div class="modal-header border-secondary border-opacity-10 py-4">
+                    <h5 class="modal-title fw-800"><i class="bi bi-person-plus text-primary me-2"></i> Add Investigator</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <form id="inviteUserForm">
-                        <div class="mb-3">
-                            <label class="form-label small text-muted">Username</label>
-                            <input type="text" id="newUsername" class="form-control bg-dark border-secondary text-white" required>
+                        <div class="mb-4">
+                            <label class="form-label small text-muted text-uppercase tracking-wider fw-bold">Codename (Username)</label>
+                            <input type="text" id="newUsername" class="form-control bg-white bg-opacity-5 border-secondary border-opacity-25 text-white py-2" required placeholder="e.g. specter_01">
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label small text-muted">Role</label>
-                            <select id="newUserRole" class="form-select bg-dark border-secondary text-white">
-                                <option value="USER">Analyst (USER)</option>
-                                <option value="ADMIN">Lead Investigator (ADMIN)</option>
+                        <div class="mb-4">
+                            <label class="form-label small text-muted text-uppercase tracking-wider fw-bold">Secure Email</label>
+                            <input type="email" id="newEmail" class="form-control bg-white bg-opacity-5 border-secondary border-opacity-25 text-white py-2" required placeholder="investigator@agency.gov">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label small text-muted text-uppercase tracking-wider fw-bold">Temporary Access Key</label>
+                            <input type="password" id="newPassword" class="form-control bg-white bg-opacity-5 border-secondary border-opacity-25 text-white py-2" required placeholder="••••••••">
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label small text-muted text-uppercase tracking-wider fw-bold">Clearance Level</label>
+                            <select id="newRole" class="form-select bg-white bg-opacity-5 border-secondary border-opacity-25 text-white py-2">
+                                <option value="ADMIN">ADMINISTRATOR</option>
+                                <option value="ANALYST">THREAT ANALYST</option>
+                                <option value="AUDITOR">SECURITY AUDITOR</option>
                             </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small text-muted">Temporary Password</label>
-                            <input type="password" id="newPassword" class="form-control bg-dark border-secondary text-white" required>
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer border-secondary">
-                    <button type="button" class="btn btn-outline-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary rounded-pill px-4" onclick="inviteUser()">Send Invite</button>
+                <div class="modal-footer border-0 p-4 pt-0">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">CANCEL</button>
+                    <button type="button" class="btn btn-primary rounded-pill px-4 fw-bold shadow" onclick="inviteUser()">GRANT ACCESS</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const csrfToken = document.querySelector('input[name="_csrf"]')?.value;
-        const csrfHeader = "X-CSRF-TOKEN";
-
-        async function inviteUser() {
+        function inviteUser() {
             const user = {
                 username: document.getElementById('newUsername').value,
+                email: document.getElementById('newEmail').value,
                 password: document.getElementById('newPassword').value,
-                role: document.getElementById('newUserRole').value,
-                enabled: true
+                role: document.getElementById('newRole').value
             };
 
-            try {
-                const response = await fetch('/api/users/invite', {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        [csrfHeader]: csrfToken
-                    },
-                    body: JSON.stringify(user)
-                });
-                
-                if(response.ok) {
-                    location.reload();
-                } else if(response.status === 409) {
-                    alert('Error: This investigator username already exists.');
+            fetch('/api/users/invite', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(user)
+            }).then(response => {
+                if (response.ok) {
+                    window.location.reload();
                 } else {
-                    alert('Failed to invite user. Please check all fields.');
+                    response.text().then(text => alert(text));
                 }
-            } catch (error) {
-                alert('Connection error. Server may be offline.');
-            }
+            });
         }
 
-        async function deleteUser(id) {
-            if(!confirm('Permanently remove this investigator?')) return;
-            try {
-                const response = await fetch(`/api/users/${id}`, {
-                    method: 'DELETE',
-                    headers: { [csrfHeader]: csrfToken }
-                });
-                if(response.ok) document.getElementById(`user-${id}`).remove();
-                else alert('Deletion failed.');
-            } catch (error) {
-                alert('Error connecting to server.');
+        function deleteUser(id) {
+            if (confirm('Are you sure you want to permanently revoke this access protocol?')) {
+                fetch(`/api/users/${id}`, { method: 'DELETE' })
+                    .then(response => { if (response.ok) window.location.reload(); });
             }
         }
-
-        // Connect Invite Button
-        document.querySelector('.btn-outline-light.rounded-pill').setAttribute('data-bs-toggle', 'modal');
-        document.querySelector('.btn-outline-light.rounded-pill').setAttribute('data-bs-target', '#inviteUserModal');
     </script>
 </body>
 </html>

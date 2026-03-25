@@ -3,291 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise Dashboard | Fraud Intelligence</title>
-    <!-- Bootstrap 5 CSS -->
+    <title>Cyber-Command | Enterprise Fraud Intelligence</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/cyber-command.css}">
     <style>
-        :root {
-            --bg-dark: #0f172a;
-            --sidebar-bg: #1e293b;
-            --accent-blue: #3b82f6;
-            --accent-emerald: #10b981;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.08);
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            margin: 0;
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar Styling */
-        .sidebar {
-            width: 280px;
-            background: var(--sidebar-bg);
-            border-right: 1px solid var(--glass-border);
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            height: 100vh;
-            z-index: 1000;
-        }
-
-        .sidebar-header {
-            padding: 2rem;
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        .sidebar-brand {
-            font-weight: 800;
-            font-size: 1.25rem;
-            color: #fff;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-        }
-
-        .sidebar-brand i { margin-right: 12px; color: var(--accent-blue); }
-
-        .sidebar-nav {
-            padding: 1.5rem 1rem;
-            flex-grow: 1;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            padding: 0.8rem 1.2rem;
-            color: var(--text-muted) !important;
-            border-radius: 12px;
-            margin-bottom: 0.5rem;
-            transition: all 0.3s;
-            font-weight: 500;
-            text-decoration: none;
-        }
-
-        .nav-link i { margin-right: 12px; font-size: 1.2rem; }
-
-        .nav-link:hover, .nav-link.active {
-            background: rgba(59, 130, 246, 0.1);
-            color: #fff !important;
-        }
-
-        .nav-link.active { background: var(--accent-blue); color: #fff !important; }
-
-        .sidebar-footer {
-            padding: 1.5rem;
-            border-top: 1px solid var(--glass-border);
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-left: 280px;
-            flex-grow: 1;
-            padding: 2rem;
-        }
-
-        .header-section {
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 1.5rem;
-            transition: transform 0.3s;
-            height: 100%;
-        }
-
-        .stat-card:hover { transform: translateY(-5px); }
-
-        .stat-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .icon-blue { background: rgba(59, 130, 246, 0.1); color: var(--accent-blue); }
-        .icon-emerald { background: rgba(16, 185, 129, 0.1); color: var(--accent-emerald); }
-        .icon-red { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
-
-        .stat-value { font-size: 2.25rem; font-weight: 800; }
-        .stat-label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
-
-        /* Feature Sections */
-        .dashboard-grid {
-            margin-top: 2rem;
-        }
-
-        .glass-panel {
-            background: var(--card-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .btn-scan {
-            background: var(--accent-blue);
-            color: #fff;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            font-weight: 700;
-        }
-
-        .result-box {
-            display: none;
-            margin-top: 1.5rem;
-            padding: 1.5rem;
-            border-radius: 12px;
-            border-left: 4px solid var(--accent-blue);
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        /* Responsive */
-        @media (max-width: 992px) {
-            .sidebar { width: 80px; }
-            .sidebar .sidebar-brand span, .sidebar .nav-link span { display: none; }
-            .sidebar-brand { justify-content: center; }
-            .sidebar-brand i { margin-right: 0; }
-            .nav-link i { margin-right: 0; }
-            .main-content { margin-left: 80px; }
+        .sidebar-toggle { display: none; }
+        @media (max-width: 991px) {
+            .cyber-sidebar { margin-left: -280px; }
+            .cyber-sidebar.show { margin-left: 0; }
+            .main-content { margin-left: 0 !important; }
+            .sidebar-toggle { display: block; }
         }
     </style>
 </head>
 <body>
-
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <a href="/dashboard" class="sidebar-brand">
-                <i class="bi bi-shield-lock-fill"></i> <span>FRAUD INTEL</span>
+    <!-- Sidebar -->
+    <aside class="cyber-sidebar" id="sidebar">
+        <div class="p-4 border-bottom border-secondary border-opacity-25 mb-3">
+            <a href="/dashboard" class="text-white text-decoration-none fw-800 d-flex align-items-center">
+                <i class="bi bi-shield-lock-fill me-2 fs-4 text-primary"></i> 
+                <span>FRAUD <span class="text-primary text-opacity-75">INTEL</span></span>
             </a>
         </div>
-        <nav class="sidebar-nav">
-            <a href="/dashboard" class="nav-link active">
-                <i class="bi bi-grid-fill"></i> <span>Overview</span>
-            </a>
-            <a href="/threat-scan" class="nav-link">
-                <i class="bi bi-eye-fill"></i> <span>Threat Scan</span>
-            </a>
-            <a href="/mitigation-rules" class="nav-link">
-                <i class="bi bi-shield-shaded"></i> <span>Mitigation Rules</span>
-            </a>
-            <a href="/authorized-users" class="nav-link">
-                <i class="bi bi-people-fill"></i> <span>Authorized Users</span>
-            </a>
-            <a href="/audit-logs" class="nav-link">
-                <i class="bi bi-journal-text"></i> <span>Audit Logs</span>
-            </a>
+        <nav class="px-2">
+            <a href="/dashboard" class="nav-link-cyber active"><i class="bi bi-grid-fill me-3"></i> Overview</a>
+            <a href="/threat-scan" class="nav-link-cyber"><i class="bi bi-eye-fill me-3"></i> Threat Scan</a>
+            <a href="/mitigation-rules" class="nav-link-cyber"><i class="bi bi-shield-shaded me-3"></i> Mitigation Rules</a>
+            <a href="/authorized-users" class="nav-link-cyber"><i class="bi bi-people-fill me-3"></i> Authorized Users</a>
+            <a href="/audit-logs" class="nav-link-cyber"><i class="bi bi-journal-text me-3"></i> Audit Logs</a>
         </nav>
-        <div class="sidebar-footer">
-            <form th:action="@{/logout}" method="post">
-                <button type="submit" class="nav-link logout-btn w-100 border-0 bg-transparent text-danger">
-                    <i class="bi bi-box-arrow-left"></i> <span>Log Out</span>
+        
+        <div class="mt-auto p-4 border-top border-secondary border-opacity-10">
+            <div class="d-flex align-items-center">
+                <div class="rounded-circle bg-success bg-opacity-10 p-2 me-3 pulse-emerald">
+                    <i class="bi bi-cpu text-success"></i>
+                </div>
+                <div>
+                    <div class="small fw-bold text-white">System Guard</div>
+                    <div class="text-muted" style="font-size: 0.7rem;">Neural Core: Active</div>
+                </div>
+            </div>
+            <form th:action="@{/logout}" method="post" class="mt-4">
+                <button type="submit" class="btn btn-link text-muted text-decoration-none small p-0 fw-bold">
+                    <i class="bi bi-box-arrow-right me-2"></i> TERMINATE SESSION
                 </button>
             </form>
         </div>
     </aside>
 
-    <main class="main-content">
+    <!-- Main Content -->
+    <main class="main-content" style="margin-left: 280px; padding: 2.5rem; flex-grow: 1;">
+        <!-- Header -->
         <div class="d-flex justify-content-between align-items-center mb-5">
             <div>
-                <h2 class="fw-800 mb-1">Threat Intelligence Control</h2>
-                <p class="text-muted mb-0">Live security monitoring and payload heuristics.</p>
+                <h2 class="fw-800 mb-1">Security Command Center</h2>
+                <p class="text-muted small mb-0">Multi-layer heuristic orchestration and threat mitigation.</p>
             </div>
-            <div class="d-flex gap-3">
-                <button class="btn btn-outline-secondary rounded-pill px-4" onclick="location.reload()"><i class="bi bi-arrow-clockwise me-2"></i> Refresh Data</button>
-            </div>
-        </div>
-
-        <div class="row g-4">
-            <div class="col-md-3">
-                <div class="stat-card">
-                    <div class="stat-icon icon-red"><i class="bi bi-exclamation-triangle-fill"></i></div>
-                    <div class="stat-value" th:text="${activeThreats}">2</div>
-                    <div class="stat-label">Active Threats Identified</div>
+            <div class="d-flex gap-3 align-items-center">
+                <button class="btn sidebar-toggle text-white fs-3"><i class="bi bi-list"></i></button>
+                <div class="glass-card py-2 px-3 d-flex align-items-center gap-2" style="padding: 0.5rem 1rem !important; border-radius: 12px;">
+                    <span class="badge bg-primary bg-opacity-25 text-primary rounded-pill p-1"><i class="bi bi-clock"></i></span>
+                    <span class="small fw-bold" id="liveTime">00:00:00</span>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-card">
-                    <div class="stat-icon icon-emerald"><i class="bi bi-shield-fill-check"></i></div>
-                    <div class="stat-value" th:text="${blockedThreats}">2</div>
-                    <div class="stat-label">Total Frauds Blocked</div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-card">
-                    <div class="stat-icon icon-blue"><i class="bi bi-activity"></i></div>
-                    <div class="stat-value" th:text="${totalScans}">4</div>
-                    <div class="stat-label">Payloads Analyzed</div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-card">
-                    <div class="stat-icon icon-blue"><i class="bi bi-people-fill"></i></div>
-                    <div class="stat-value" th:text="${activeUsers}">4</div>
-                    <div class="stat-label">Active Investigators</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="dashboard-grid row mt-4">
-            <div class="col-lg-12">
-                <div class="glass-panel h-100">
-                    <h5 class="fw-700 mb-4"><i class="bi bi-lightning-fill me-2 text-warning"></i> Real-time Security Events</h5>
-                    <div class="activity-feed">
-                        <!-- thymeleaf loop for logs -->
-                        <div th:each="log : ${recentLogs}" class="mb-3 pb-3 border-bottom border-white-10">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <span class="badge rounded-pill mb-2 px-3" 
-                                          th:classappend="${log.action == 'BLOCK' ? 'bg-danger' : (log.action == 'CHALLENGE' ? 'bg-warning text-dark' : 'bg-primary-subtle text-primary')}"
-                                          th:text="${log.action}">SCAN</span>
-                                    <p class="m-0 small text-white" th:text="${log.details}">URL Scan performed on paypal.xyz</p>
-                                </div>
-                                <span class="text-muted extra-small" th:text="${#temporals.format(log.timestamp, 'HH:mm')}">12:45</span>
-                            </div>
+                <div class="dropdown">
+                    <div class="glass-card p-2 d-flex align-items-center gap-2 cursor-pointer" style="padding: 0.4rem !important; border-radius: 12px;" data-bs-toggle="dropdown">
+                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                            <i class="bi bi-person-fill text-white"></i>
                         </div>
-                        <div th:if="${#lists.isEmpty(recentLogs)}" class="text-center py-4">
-                            <p class="text-muted small m-0">No recent activity detected.</p>
-                        </div>
+                        <span class="small fw-bold me-2" th:text="${#authentication.name}">Investigator</span>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Key Metrics -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-3">
+                <div class="glass-card text-center position-relative overflow-hidden">
+                    <div class="position-absolute top-0 end-0 p-3 opacity-10"><i class="bi bi-shield-check fs-1"></i></div>
+                    <span class="d-block small text-muted text-uppercase tracking-wider mb-2">Total Scans</span>
+                    <h3 class="stat-value" th:text="${totalScans}">0</h3>
+                    <div class="progress mt-3 bg-white bg-opacity-5" style="height: 4px;">
+                        <div class="progress-bar bg-primary" style="width: 70%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="glass-card text-center position-relative overflow-hidden">
+                    <div class="position-absolute top-0 end-0 p-3 opacity-10 text-danger"><i class="bi bi-shield-slash fs-1"></i></div>
+                    <span class="d-block small text-muted text-uppercase tracking-wider mb-2">Threats Neutralized</span>
+                    <h3 class="stat-value text-danger" th:text="${blockedCount}">0</h3>
+                    <div class="progress mt-3 bg-white bg-opacity-5" style="height: 4px;">
+                        <div class="progress-bar bg-danger" style="width: 40%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="glass-card text-center position-relative overflow-hidden">
+                    <div class="position-absolute top-0 end-0 p-3 opacity-10 text-success"><i class="bi bi-people fs-1"></i></div>
+                    <span class="d-block small text-muted text-uppercase tracking-wider mb-2">Command Team</span>
+                    <h3 class="stat-value text-success" th:text="${investigatorCount}">0</h3>
+                    <div class="progress mt-3 bg-white bg-opacity-5" style="height: 4px;">
+                        <div class="progress-bar bg-success" style="width: 60%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="glass-card text-center position-relative overflow-hidden border-primary border-opacity-50">
+                    <div class="position-absolute top-0 end-0 p-3 opacity-20 text-primary"><i class="bi bi-lightning-charge fs-1"></i></div>
+                    <span class="d-block small text-muted text-uppercase tracking-wider mb-2">Heuristic Accuracy</span>
+                    <h3 class="stat-value text-info">99.8%</h3>
+                    <div class="progress mt-3 bg-white bg-opacity-5" style="height: 4px;">
+                        <div class="progress-bar bg-info" style="width: 99%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Recent Activity -->
+            <div class="col-lg-8">
+                <div class="glass-card mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-700 mb-0 d-flex align-items-center">
+                            <i class="bi bi-journal-code text-primary me-2"></i> Recent Security Events
+                        </h5>
+                        <a href="/audit-logs" class="text-primary text-decoration-none small fw-bold">VIEW ALL <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="cyber-table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Agent</th>
+                                    <th>Action</th>
+                                    <th>Outcome</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="log : ${recentLogs}">
+                                    <td class="small" th:text="${#temporals.format(log.timestamp, 'HH:mm:ss')}">10:00:00</td>
+                                    <td class="fw-bold small" th:text="${log.performedBy}">System</td>
+                                    <td class="text-muted small" th:text="${log.action}">SCAN_EXECUTED</td>
+                                    <td>
+                                        <span class="badge rounded-pill bg-success bg-opacity-10 text-success px-3" 
+                                              th:if="${log.action != 'USER_BLOCKED'}" th:text="'SUCCESS'">SUCCESS</span>
+                                        <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger px-3" 
+                                              th:if="${log.action == 'USER_BLOCKED'}" th:text="'PROTECTED'">PROTECTED</span>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(recentLogs)}">
+                                    <td colspan="4" class="text-center py-4 text-muted small">No recent activity detected.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions / Status -->
+            <div class="col-lg-4">
+                <div class="glass-card mb-4 border-primary border-opacity-25">
+                    <h5 class="fw-700 mb-4"><i class="bi bi-shield-shaded text-primary me-2"></i> Threat Status</h5>
+                    <div class="d-flex flex-column gap-3">
+                        <div class="p-3 bg-white bg-opacity-5 rounded-3 d-flex justify-content-between align-items-center">
+                            <span class="small text-muted">Firewall Cluster</span>
+                            <span class="badge bg-success bg-opacity-75 rounded-pill px-3">ACTIVE</span>
+                        </div>
+                        <div class="p-3 bg-white bg-opacity-5 rounded-3 d-flex justify-content-between align-items-center">
+                            <span class="small text-muted">Neural Engine</span>
+                            <span class="badge bg-success bg-opacity-75 rounded-pill px-3">OPTIMAL</span>
+                        </div>
+                        <div class="p-3 bg-white bg-opacity-5 rounded-3 d-flex justify-content-between align-items-center">
+                            <span class="small text-muted">Global Blacklist</span>
+                            <span class="badge bg-info bg-opacity-75 rounded-pill px-3">SYNCED</span>
+                        </div>
+                    </div>
+                    <hr class="my-4 border-secondary border-opacity-25">
+                    <a href="/threat-scan" class="btn btn-primary w-100 rounded-pill fw-bold py-2 shadow-sm">
+                        <i class="bi bi-plus-lg me-2"></i> NEW DEEP SCAN
+                    </a>
+                </div>
+
+                <div class="glass-card">
+                    <h6 class="fw-bold mb-3 small text-muted text-uppercase">Command Tip</h6>
+                    <p class="small text-white-50 mb-0">Use the <span class="text-primary fw-bold">Threat Scan</span> console to analyze URL entropy and detect credential harvesting patterns in real-time.</p>
+                </div>
+            </div>
+        </div>
     </main>
 
-    <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const csrfToken = document.querySelector('input[name="_csrf"]')?.value;
-        const csrfHeader = "X-CSRF-TOKEN";
-
-        // Dashboard Auto-Refresh Metrics (Enterprise Feature)
-        async function refreshDashboardMetrics() {
-            try {
-                // Future implementation for real-time counters
-            } catch(e) {}
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ':' + 
+                          now.getMinutes().toString().padStart(2, '0') + ':' + 
+                          now.getSeconds().toString().padStart(2, '0');
+            document.getElementById('liveTime').innerText = timeStr;
         }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Sidebar mobile toggle
+        document.querySelector('.sidebar-toggle')?.addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('show');
+        });
     </script>
 </body>
 </html>
