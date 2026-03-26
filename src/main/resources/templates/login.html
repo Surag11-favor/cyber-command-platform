@@ -3,208 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Operator Authentication | CYBER-COMMAND</title>
+    <title>Enterprise Security | Sign In</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/cyber-command.css}">
     <style>
-        body {
-            height: 100vh;
+        .auth-container {
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            background: #020617;
-            padding: 1rem;
+            padding: 2rem 1rem;
         }
-
-        .auth-container {
-            width: 100%;
-            max-width: 450px;
-            z-index: 10;
-            animation: authFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @keyframes authFadeIn {
-            from { opacity: 0; transform: translateY(30px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
         .auth-card {
-            background: rgba(2, 6, 23, 0.7);
-            backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(0, 242, 255, 0.1);
-            border-radius: 24px;
-            padding: 3rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .auth-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 1px;
-            background: linear-gradient(90deg, transparent, var(--cyber-cyan), transparent);
-            opacity: 0.5;
-        }
-
-        .auth-card::after {
-            content: '';
-            position: absolute;
-            width: 150px; height: 150px;
-            background: var(--cyber-cyan);
-            filter: blur(100px);
-            opacity: 0.05;
-            top: -50px; right: -50px;
-            pointer-events: none;
-        }
-
-        .cyber-input-group {
-            position: relative;
-            margin-bottom: 1.5rem;
-        }
-
-        .cyber-input {
             width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 1rem 1rem 1rem 3rem;
+            max-width: 420px;
+            padding: 2.5rem;
+        }
+        .form-control-dark {
+            background-color: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
             color: white;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            transition: all 0.3s;
+            padding: 0.8rem 1rem;
         }
-
-        .cyber-input:focus {
-            outline: none;
-            border-color: var(--cyber-cyan);
-            background: rgba(0, 242, 255, 0.05);
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+        .form-control-dark:focus {
+            background-color: rgba(255,255,255,0.08);
+            border-color: var(--primary-color);
+            color: white;
+            box-shadow: none;
         }
-
-        .cyber-input-icon {
-            position: absolute;
-            left: 1.2rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--cyber-cyan);
-            opacity: 0.5;
-            transition: 0.3s;
-        }
-
-        .cyber-input:focus + .cyber-input-icon {
-            opacity: 1;
-            filter: drop-shadow(0 0 5px var(--cyber-cyan));
-        }
-
-        .btn-auth {
-            width: 100%;
-            background: var(--cyber-cyan);
-            color: #020617;
-            border: none;
-            border-radius: 12px;
-            padding: 1rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: all 0.3s;
-            margin-top: 1rem;
-        }
-
-        .btn-auth:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 30px rgba(0, 242, 255, 0.4);
-            filter: brightness(1.1);
-        }
-
-        .auth-corner {
-            position: absolute;
-            width: 20px; height: 20px;
-            border: 2px solid var(--cyber-cyan);
-            opacity: 0.3;
-        }
-        .top-left { top: 20px; left: 20px; border-right: 0; border-bottom: 0; }
-        .bottom-right { bottom: 20px; right: 20px; border-left: 0; border-top: 0; }
-
-        .auth-alert {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            color: #fca5a5;
-            border-radius: 12px;
-            padding: 0.8rem;
-            font-size: 0.75rem;
-            margin-bottom: 2rem;
-            text-align: center;
-            font-family: 'JetBrains Mono', monospace;
-        }
-        .auth-alert-success {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            color: #6ee7b7;
+        .form-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
-
-    <div class="hud-background"></div>
-    <div class="data-stream"></div>
-
-    <div class="auth-container">
-        <div class="auth-card">
-            <div class="auth-corner top-left"></div>
-            <div class="auth-corner bottom-right"></div>
-
-            <div class="text-center mb-5">
-                <div class="d-inline-block p-3 rounded-circle bg-white bg-opacity-5 mb-4 border border-white border-opacity-10">
-                    <i class="bi bi-shield-lock-fill fs-1 text-info" style="filter: drop-shadow(0 0 10px var(--cyber-cyan));"></i>
-                </div>
-                <h2 class="fw-900 text-uppercase mono tracking-tighter" style="color: var(--cyber-cyan);">CYBER-COMMAND</h2>
-                <p class="mono extra-small opacity-50">PROMPT://AUTHENTICATION_REQUIRED</p>
+    <div class="ambient-glow"></div>
+    
+    <div class="container auth-container">
+        <div class="glass-panel auth-card">
+            <div class="text-center mb-4">
+                <i class="bi bi-shield-check text-primary fs-1 mb-3 d-inline-block"></i>
+                <h3 class="fw-bold mb-1">Welcome back</h3>
+                <p class="text-dim small">Sign in to your enterprise account</p>
             </div>
 
-            <!-- Alerts -->
-            <div th:if="${param.registered}" class="auth-alert auth-alert-success">
-                <i class="bi bi-check-circle-fill me-2"></i> REGISTRY_SUCCESS // ACCESS_ENABLED
+            <div th:if="${param.error}" class="alert alert-danger border-0 bg-danger bg-opacity-10 text-danger rounded-3 p-3 mb-4 d-flex align-items-center gap-2">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span class="small fw-medium">Invalid credentials. Please verify your identity.</span>
             </div>
 
-            <div th:if="${param.error}" class="auth-alert">
-                <i class="bi bi-shield-slash-fill me-2"></i> ERROR://INVALID_OPERATOR_CREDENTIALS
-            </div>
-
-            <div th:if="${param.logout}" class="auth-alert" style="border-color: var(--cyber-cyan); color: var(--cyber-cyan); background: rgba(0,242,255,0.05);">
-                <i class="bi bi-power me-2"></i> SESSION://TERMINATED_SUCCESSFULLY
+            <div th:if="${param.logout}" class="alert alert-success border-0 bg-success bg-opacity-10 text-success rounded-3 p-3 mb-4 d-flex align-items-center gap-2">
+                <i class="bi bi-check-circle-fill"></i>
+                <span class="small fw-medium">Successfully securely signed out.</span>
             </div>
 
             <form th:action="@{/login}" method="post">
-                <div class="cyber-input-group">
-                    <input type="text" class="cyber-input" id="username" name="username" placeholder="OPERATOR_ID" required autofocus>
-                    <i class="bi bi-person-badge-fill cyber-input-icon"></i>
+                <div class="mb-3">
+                    <label for="username" class="form-label">Enterprise ID (Username)</label>
+                    <input type="text" id="username" name="username" class="form-control form-control-dark rounded-3" required autofocus placeholder="e.g. admin">
                 </div>
+                <div class="mb-4">
+                    <label for="password" class="form-label d-flex justify-content-between">
+                        <span>Passcode</span>
+                        <a href="#" class="text-decoration-none text-primary" style="font-size: 0.8rem;">Forgot?</a>
+                    </label>
+                    <input type="password" id="password" name="password" class="form-control form-control-dark rounded-3" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary-modern w-100 mb-4 border-0">Sign In</button>
                 
-                <div class="cyber-input-group">
-                    <input type="password" class="cyber-input" id="password" name="password" placeholder="ACCESS_KEY" required>
-                    <i class="bi bi-fingerprint cyber-input-icon"></i>
+                <div class="text-center">
+                    <p class="text-dim small mb-0">Don't have an account? <a href="/register" class="text-primary text-decoration-none fw-medium">Request Access</a></p>
                 </div>
-
-                <button type="submit" class="btn-auth">Initialize Link</button>
             </form>
-
-            <div class="mt-5 pt-4 border-top border-white border-opacity-5 text-center">
-                <p class="mono extra-small opacity-40 mb-3">Unauthorized access is strictly monitored.</p>
-                <a th:href="@{/register}" class="text-info text-decoration-none mono extra-small fw-bold">
-                    <i class="bi bi-plus-lg me-1"></i> New Operator Registration
-                </a>
-            </div>
-        </div>
-        
-        <div class="text-center mt-4 opacity-30 mono" style="font-size: 0.6rem; letter-spacing: 3px;">
-            SECURE_ENCLAVE_V3.4.0 // CYBER-COMMAND
         </div>
     </div>
-
 </body>
-</html>
-/body>
 </html>

@@ -3,86 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CYBER-COMMAND | Global Neural Intelligence</title>
+    <title>Enterprise Fraud Intelligence | Threat Analysis Platform</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/cyber-command.css}">
     <style>
         .hero-title {
-            font-size: clamp(2.5rem, 10vw, 5.5rem);
-            font-weight: 900;
-            line-height: 0.95;
-            background: linear-gradient(to bottom, #fff, var(--cyber-cyan));
+            font-size: clamp(3rem, 7vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 2rem;
-        }
-        .ceo-hero-img {
-            border-radius: 40px;
-            border: 2px solid var(--glass-border);
-            box-shadow: 0 0 50px rgba(0, 242, 255, 0.15);
-            transition: 0.5s;
-        }
-        .ceo-hero-img:hover {
-            border-color: var(--cyber-cyan);
-            box-shadow: 0 0 70px var(--cyber-cyan-glow);
-            transform: scale(1.02);
+            margin-bottom: 1.5rem;
         }
         .feature-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
         }
-        .protocol-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--cyber-cyan);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            display: block;
-            margin-bottom: 0.5rem;
+        .gradient-text {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
 <body>
 
-    <div class="hud-background"></div>
-    <div class="data-stream"></div>
+    <div class="ambient-glow"></div>
 
     <nav class="navbar navbar-expand-lg py-4">
-        <div class="container">
-            <a class="navbar-brand fw-900 text-uppercase d-flex align-items-center gap-2" href="#" style="color: var(--cyber-cyan); font-size: 1.5rem;">
-                <i class="bi bi-shield-lock-fill fs-2"></i> CYBER-COMMAND
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand text-white fw-bold d-flex align-items-center gap-2" href="#">
+                <i class="bi bi-shield-check text-primary fs-3"></i> Enterprise Intelligence
             </a>
-            <div class="ms-auto d-flex align-items-center gap-4">
-                <span class="d-none d-lg-block mono small opacity-50">SYS_AUTH: CEO_LEVEL_CLEARANCE</span>
-                <a href="/login" class="btn-elite px-4">Initialize Console</a>
+            <div class="d-flex align-items-center gap-3">
+                <a href="/login" class="text-white text-decoration-none fw-medium d-none d-md-block">Sign In</a>
+                <a href="/register" class="btn-primary-modern">Get Started</a>
             </div>
         </div>
     </nav>
 
-    <header class="py-5">
+    <header class="py-5 mt-4">
         <div class="container">
             <div class="row align-items-center g-5">
                 <div class="col-lg-6">
-                    <span class="protocol-label">NEURAL_DEPOS_ACTIVE // VER_8.0</span>
-                    <h1 class="hero-title">Beyond <span style="color: var(--cyber-purple)">Security.</span> Intelligence.</h1>
-                    <p class="text-dim lead mb-5" style="max-width: 500px;">
-                        The world's first Zero-Trust Neural Platform for enterprise-grade threat neutralization. Directed by vision, powered by intelligence.
+                    <div class="badge rounded-pill bg-dark border border-secondary text-white px-3 py-2 fw-medium mb-4" style="font-size: 0.85rem;">
+                        <span class="text-primary">New</span> Zero-Trust Architecture V8.0
+                    </div>
+                    <h1 class="hero-title">Protect your enterprise with <span class="gradient-text">intelligent defense.</span></h1>
+                    <p class="text-dim fs-5 mb-5" style="max-width: 500px; line-height: 1.6;">
+                        The state-of-the-art fraud intelligence and threat analysis platform. Deployed globally by elite executives to secure the digital perimeter.
                     </p>
-                    <div class="d-flex gap-4 flex-wrap">
-                        <a href="/login" class="btn-elite">Launch Command</a>
-                        <a href="#matrix" class="btn outline-light rounded-3 px-5 py-3 fw-bold border-1 opacity-75">Global Matrix</a>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a href="/login" class="btn-primary-modern">Access Dashboard</a>
+                        <a href="/register" class="btn-secondary-modern">View Documentation</a>
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="position-relative">
-                        <img th:src="@{/images/ceo_boss.png}" alt="CEO Command" class="img-fluid ceo-hero-img">
-                        <div class="glass-panel p-3 position-absolute bottom-0 end-0 m-4 d-none d-md-block" style="border-radius: 12px;">
+                        <!-- Modern rounded imagery overlay -->
+                        <img th:src="@{/images/ceo_boss.png}" alt="Enterprise CEO" class="hero-img-modern">
+                        
+                        <div class="glass-panel p-3 position-absolute bottom-0 start-0 m-4 shadow-lg">
                             <div class="d-flex align-items-center gap-3">
-                                <div class="bg-success rounded-circle" style="width: 10px; height: 10px;"></div>
-                                <span class="mono extra-small">CEO_LIVE_STREAM: ENCRYPTED</span>
+                                <div class="bg-success rounded-circle" style="width: 12px; height: 12px; box-shadow: 0 0 10px #198754;"></div>
+                                <div>
+                                    <h6 class="mb-0 fw-bold text-white fs-6">System Status</h6>
+                                    <small class="text-dim">Optimal Protection</small>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -91,101 +82,79 @@
         </div>
     </header>
 
-    <section id="matrix" class="py-5">
+    <section class="py-5 mt-5">
         <div class="container py-5">
-            <div class="row mb-5 text-center">
-                <div class="col-12">
-                    <span class="protocol-label">DEFENSE PROTOCOLS</span>
-                    <h2 class="display-4 fw-800">Extraordinary Protection</h2>
-                </div>
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold mb-3">Enterprise-Grade Security</h2>
+                <p class="text-dim fs-5 mx-auto" style="max-width: 600px;">Built for the modern organization. Stop threats before they occur using predictive intelligence.</p>
             </div>
             <div class="feature-grid">
-                <!-- Zero-Trust Card -->
-                <div class="glass-panel p-5 tactical-glow">
-                    <div class="mb-4 text-primary fs-1"><i class="bi bi-person-badge-fill"></i></div>
-                    <h4 class="fw-bold">Zero-Trust Intelligence</h4>
-                    <p class="text-dim small mb-4">Continuous identity verification at every node. No actor is trusted without multi-layer neural hashing and biometric cross-referencing.</p>
-                    <div class="mono extra-small text-info mt-auto">STATUS: ENFORCED</div>
+                <div class="glass-panel p-5">
+                    <div class="mb-4 text-primary fs-1"><i class="bi bi-shield-shaded"></i></div>
+                    <h4 class="fw-bold mb-3">Zero-Trust Protocol</h4>
+                    <p class="text-dim">Continuous identity verification at every node. Absolute isolation for critical data assets with multi-factor biometric cross-referencing.</p>
                 </div>
 
-                <!-- Quantum-Safe Card -->
-                <div class="glass-panel p-5 tactical-glow">
-                    <div class="mb-4 text-purple fs-1" style="color: var(--cyber-purple);"><i class="bi bi-infinity"></i></div>
-                    <h4 class="fw-bold">Quantum-Safe Guard</h4>
-                    <p class="text-dim small mb-4">Implementing Lattice-based cryptography to shield your assets from post-quantum decryption threats. Future-proof and immutable.</p>
-                    <div class="mono extra-small text-info mt-auto">STATUS: DEPLOYED</div>
+                <div class="glass-panel p-5">
+                    <div class="mb-4 text-info fs-1"><i class="bi bi-lock-fill"></i></div>
+                    <h4 class="fw-bold mb-3">Quantum-Safe Guard</h4>
+                    <p class="text-dim">Implementing Lattice-based cryptography to shield your assets from post-quantum decryption threats. Future-proof and immutable.</p>
                 </div>
 
-                <!-- AI Predictive Card -->
-                <div class="glass-panel p-5 tactical-glow">
-                    <div class="mb-4 text-success fs-1"><i class="bi bi-cpu-fill"></i></div>
-                    <h4 class="fw-bold">AI Predictive Neural</h4>
-                    <p class="text-dim small mb-4">Moving from reactive to proactive. Our AI models forecast breach vectors before they materialize using global threat telemetry.</p>
-                    <div class="mono extra-small text-info mt-auto">STATUS: LEARNING</div>
+                <div class="glass-panel p-5">
+                    <div class="mb-4 text-warning fs-1"><i class="bi bi-cpu"></i></div>
+                    <h4 class="fw-bold mb-3">Predictive AI Neural</h4>
+                    <p class="text-dim">Moving from reactive to proactive. Our AI models forecast breach vectors before they materialize using global telemetry.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Global Threat Intelligence Section -->
-    <section class="py-5 bg-black bg-opacity-25">
+    <!-- Global Operations Section -->
+    <section class="py-5 mt-5" style="border-top: 1px solid var(--border-color);">
         <div class="container py-5">
-            <div class="row align-items-center g-5">
-                <div class="col-lg-5">
-                    <img th:src="@{/images/command_center.png}" alt="Elite Team" class="img-fluid ceo-hero-img">
+            <div class="row align-items-center g-5 flex-row-reverse">
+                <div class="col-lg-6">
+                    <img th:src="@{/images/command_center.png}" alt="Global Operations Team" class="hero-img-modern" style="border-radius: 20px;">
                 </div>
-                <div class="col-lg-7">
-                    <span class="protocol-label">GLOBAL INTEL FEED</span>
-                    <h2 class="display-5 fw-800 mb-4">Elite Defense Architecture</h2>
-                    <p class="text-dim lead mb-5">
-                        Our platform is managed by the world's finest intelligence operatives. 24/7 global monitoring, rapid incident response, and deep-web threat hunting are standard for our partners.
+                <div class="col-lg-6">
+                    <div class="badge rounded-pill bg-dark border border-secondary text-white px-3 py-2 fw-medium mb-4">Global Network</div>
+                    <h2 class="display-5 fw-bold mb-4">Elite Defense Operations</h2>
+                    <p class="text-dim fs-5 mb-5">
+                        Our platform is monitored by a diverse, world-class team of security analysts and operations experts. Rapid incident response and global threat hunting are standard.
                     </p>
-                    <div class="row g-4">
-                        <div class="col-sm-6">
-                            <div class="d-flex align-items-center gap-3">
-                                <i class="bi bi-geo-alt-fill text-info fs-3"></i>
-                                <div>
-                                    <h6 class="fw-bold mb-0">Edge Neutralization</h6>
-                                    <p class="text-dim small mb-0">Mitigation at the request origin.</p>
-                                </div>
+                    <ul class="list-unstyled d-flex flex-column gap-3">
+                        <li class="d-flex align-items-start gap-3">
+                            <i class="bi bi-check-circle-fill text-primary fs-5 mt-1"></i>
+                            <div>
+                                <h6 class="fw-bold mb-1 fs-5">Active Edge Neutralization</h6>
+                                <p class="text-dim mb-0">Mitigate threats precisely at the request origin.</p>
                             </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="d-flex align-items-center gap-3">
-                                <i class="bi bi-lock-fill text-info fs-3"></i>
-                                <div>
-                                    <h6 class="fw-bold mb-0">Encryption Bridge</h6>
-                                    <p class="text-dim small mb-0">End-to-end military tunnel.</p>
-                                </div>
+                        </li>
+                        <li class="d-flex align-items-start gap-3">
+                            <i class="bi bi-check-circle-fill text-primary fs-5 mt-1"></i>
+                            <div>
+                                <h6 class="fw-bold mb-1 fs-5">End-to-End Encryption</h6>
+                                <p class="text-dim mb-0">Secure tunneling for all network layers.</p>
                             </div>
-                        </div>
-                    </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="py-5 mt-5">
-        <div class="container py-5 border-top border-secondary border-opacity-25">
-            <div class="row g-4">
-                <div class="col-lg-6">
-                    <h2 class="fw-900 d-flex align-items-center gap-2 mb-4" style="color: var(--cyber-cyan); font-size: 1.2rem;">
-                        <i class="bi bi-shield-lock-fill fs-3"></i> CYBER-COMMAND
-                    </h2>
-                    <p class="text-dim small">The global standard for extraordinay threat intelligence. Deployed globally, managed by elite operatives.</p>
+    <footer class="py-5 mt-5 border-top border-secondary border-opacity-25">
+        <div class="container pt-4">
+            <div class="row g-4 align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <a class="navbar-brand text-white fw-bold d-flex align-items-center gap-2 justify-content-center justify-content-md-start" href="#">
+                        <i class="bi bi-shield-check text-primary fs-4"></i>
+                        <span class="fs-5">Enterprise Intelligence</span>
+                    </a>
                 </div>
-                <div class="col-lg-6 text-lg-end">
-                    <p class="mono small opacity-50 mb-4">SYS_CONTACT: SUPPORT@CYBERCOMMAND.ONLINE</p>
-                    <div class="d-flex justify-content-lg-end gap-3">
-                        <a href="#" class="text-dim text-decoration-none">Protocols</a>
-                        <a href="#" class="text-dim text-decoration-none">Audit Zero</a>
-                        <a href="#" class="text-dim text-decoration-none">Compliance</a>
-                    </div>
-                </div>
-            </div>
-            <div class="row mt-5 pt-3">
-                <div class="col-12 text-center">
-                    <p class="extra-small opacity-25">© 2026 CYBER-COMMAND PLATFORM. DESIGNED FOR THE EXTRAORDINARY.</p>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="text-dim small mb-0">© 2026 Enterprise Threat Analysis Platform. All rights reserved.</p>
                 </div>
             </div>
         </div>

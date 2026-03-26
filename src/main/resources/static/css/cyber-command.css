@@ -1,326 +1,112 @@
-/* 
-  CYBER-COMMAND GLOBAL DESIGN SYSTEM 
-  Mobile-First Responsive + Glassmorphism + Neon Accents
-*/
+/* cyber-command.css -> Rebranded to sleek modern SaaS */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-    --bg-deep: #020617;
-    --sidebar-bg: rgba(15, 23, 42, 0.95);
-    --glass-bg: rgba(30, 41, 59, 0.4);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --sidebar-width: 280px;
-    
-    /* Extraordinary Tactical Palette */
-    --cyber-cyan: #00f2ff;
-    --cyber-cyan-glow: rgba(0, 242, 255, 0.3);
-    --cyber-blue: #38bdf8;
-    --cyber-blue-glow: rgba(56, 189, 248, 0.4);
-    
-    --emerald-guard: #10b981;
-    --emerald-glow: rgba(16, 185, 129, 0.3);
-    
-    --crimson-breach: #ef4444;
-    --crimson-glow: rgba(239, 68, 68, 0.3);
-    
-    --amber-warn: #f59e0b;
-    
-    --text-primary: #f8fafc;
-    --text-muted: #94a3b8;
+    --bg-main: #000000;
+    --bg-secondary: #09090b; /* Zinc 950 */
+    --text-primary: #ffffff;
+    --text-secondary: #a1a1aa; /* Zinc 400 */
+    --border-color: rgba(255, 255, 255, 0.1);
+    --border-hover: rgba(255, 255, 255, 0.2);
+    --primary-color: #ffffff;
+    --primary-inverse: #000000;
+    --accent-blue: #3b82f6;
+    --accent-purple: #8b5cf6;
 }
-
-*, *::before, *::after { box-sizing: border-box; }
 
 body {
-    background: #020617;
+    background-color: var(--bg-main);
     color: var(--text-primary);
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
-    overflow-x: hidden;
-    -webkit-text-size-adjust: 100%;
 }
 
-/* ================================================================
-   ULTRAMODERN HUD LAYERS
-   ================================================================ */
-.hud-background {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background-image: 
-        linear-gradient(rgba(2, 6, 23, 0.8), rgba(2, 6, 23, 0.95)),
-        url('/images/hud_bg.png');
-    background-size: cover;
-    background-position: center;
-    z-index: -2;
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.text-dim {
+    color: var(--text-secondary);
+}
+
+.fw-900 {
+    font-weight: 900;
+}
+
+/* Background Gradients */
+.ambient-glow {
+    position: absolute;
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.05) 40%, rgba(0,0,0,0) 70%);
+    top: -30vw;
+    left: 20%;
+    z-index: -1;
     pointer-events: none;
 }
 
-.data-stream {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: 
-        linear-gradient(rgba(0, 242, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 242, 255, 0.03) 1px, transparent 1px);
-    background-size: 50px 50px;
-    z-index: -1;
-    opacity: 0.5;
-    animation: grid-shift 60s linear infinite;
-}
-
-@keyframes grid-shift {
-    from { background-position: 0 0; }
-    to { background-position: 500px 500px; }
-}
-
-/* ================================================================
-   TINY TYPOGRAPHY & UTILITIES
-   ================================================================ */
-.mono { font-family: 'JetBrains Mono', monospace; }
-.extra-small { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; }
-.fw-900 { font-weight: 900; }
-.tracking-tighter { letter-spacing: -2px; }
-
+/* Modern Card/Panel */
 .glass-panel {
-    background: rgba(15, 23, 42, 0.6);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 32px;
-}
-
-/* ================================================================
-   GLASSMORPHISM PANEL
-   ================================================================ */
-.glass-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--glass-border);
-    border-radius: 24px;
-    padding: 2rem;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
-}
-
-.glass-card:hover {
-    border-color: var(--cyber-blue);
-    box-shadow: 0 0 25px var(--cyber-blue-glow);
-    transform: translateY(-4px);
-}
-
-/* ================================================================
-   SIDEBAR — Off-canvas on mobile, fixed on desktop
-   ================================================================ */
-.cyber-sidebar {
-    width: var(--sidebar-width);
-    background: var(--sidebar-bg);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-right: 1px solid var(--glass-border);
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    z-index: 1050;
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+    transition: all 0.3s ease;
 }
 
-/* Sidebar overlay backdrop for mobile */
-.sidebar-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 1040;
-    opacity: 0;
-    transition: opacity 0.35s ease;
-}
-.sidebar-overlay.active {
-    display: block;
-    opacity: 1;
-}
-
-/* Mobile hamburger toggle */
-.sidebar-toggle {
-    display: none;
-    background: none;
-    border: none;
-    color: var(--text-primary);
-    font-size: 1.6rem;
-    padding: 0.5rem;
-    cursor: pointer;
-    z-index: 1060;
-    min-width: 44px;
-    min-height: 44px;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Nav links — touch-friendly sizing */
-.nav-link-extra {
-    display: flex;
-    align-items: center;
-    padding: 1rem 2rem;
-    color: rgba(255,255,255,0.4) !important;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 0.85rem;
-    transition: all 0.3s;
-    border-left: 3px solid transparent;
-}
-.nav-link-extra:hover, .nav-link-extra.active {
-    color: var(--cyber-cyan) !important;
-    background: rgba(0, 242, 255, 0.05);
-    border-left-color: var(--cyber-cyan);
-}
-
-/* Main content area */
-.main-content {
-    margin-left: var(--sidebar-width);
-    padding: 2.5rem;
-    flex-grow: 1;
-    min-height: 100vh;
-    transition: margin-left 0.35s ease;
-}
-
-/* ================================================================
-   NEON PULSE INDICATORS
-   ================================================================ */
-.pulse-emerald {
-    box-shadow: 0 0 0 0 var(--emerald-glow);
-    animation: pulse-emerald-anim 2s infinite;
-}
-
-@keyframes pulse-emerald-anim {
-    0% { box-shadow: 0 0 0 0 var(--emerald-glow); }
-    70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-}
-
-/* ================================================================
-   PROFESSIONAL TABLES
-   ================================================================ */
-.cyber-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 8px;
-}
-
-.cyber-table th {
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    padding: 0.8rem 1rem;
-    white-space: nowrap;
-}
-
-.cyber-table tr {
-    transition: all 0.3s;
-}
-
-.cyber-table td {
-    background: rgba(255, 255, 255, 0.02);
-    padding: 1rem 0.8rem;
-}
-
-.cyber-table td:first-child { border-radius: 12px 0 0 12px; }
-.cyber-table td:last-child { border-radius: 0 12px 12px 0; }
-
-.cyber-table tr:hover td {
+.glass-panel:hover {
+    border-color: var(--border-hover);
     background: rgba(255, 255, 255, 0.05);
-    color: #fff;
+    transform: translateY(-2px);
 }
 
-/* ================================================================
-   STATS BADGES
-   ================================================================ */
-.stat-value {
-    font-size: 2.5rem;
-    font-weight: 800;
-    background: linear-gradient(to bottom, #fff, #94a3b8);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+/* Buttons */
+.btn-primary-modern {
+    background: var(--primary-color);
+    color: var(--primary-inverse);
+    border: 1px solid var(--primary-color);
+    border-radius: 9999px;
+    padding: 0.75rem 1.75rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
 }
 
-/* ================================================================
-   RESPONSIVE: TABLETS (≤991px) — Sidebar off-canvas
-   ================================================================ */
-@media (max-width: 991.98px) {
-    .cyber-sidebar {
-        transform: translateX(-100%);
-    }
-    .cyber-sidebar.show {
-        transform: translateX(0);
-    }
-
-    .sidebar-toggle {
-        display: flex;
-    }
-
-    .main-content {
-        margin-left: 0 !important;
-        padding: 1.5rem;
-    }
-
-    .glass-card {
-        border-radius: 18px;
-        padding: 1.5rem;
-    }
-
-    .glass-card:hover {
-        transform: none; /* prevent jumpy hover on touch */
-    }
-
-    .stat-value {
-        font-size: 2rem;
-    }
+.btn-primary-modern:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    color: var(--primary-inverse);
 }
 
-/* ================================================================
-   RESPONSIVE: PHONES (≤576px) — Compact everything
-   ================================================================ */
-@media (max-width: 576px) {
-    .main-content {
-        padding: 1rem 0.75rem;
-    }
+.btn-secondary-modern {
+    background: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--border-color);
+    border-radius: 9999px;
+    padding: 0.75rem 1.75rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
 
-    .glass-card {
-        border-radius: 14px;
-        padding: 1.25rem;
-    }
+.btn-secondary-modern:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: var(--primary-color);
+}
 
-    .stat-value {
-        font-size: 1.6rem;
-    }
-
-    .cyber-table th {
-        font-size: 0.65rem;
-        padding: 0.6rem 0.5rem;
-    }
-
-    .cyber-table td {
-        padding: 0.75rem 0.5rem;
-        font-size: 0.8rem;
-    }
-
-    .nav-link-cyber {
-        padding: 0.8rem 1rem;
-        font-size: 0.9rem;
-        margin: 0.25rem 0.5rem;
-    }
-
-    /* Stack header flex layouts vertically */
-    .d-flex.justify-content-between.align-items-center.mb-5 {
-        flex-direction: column;
-        align-items: flex-start !important;
-        gap: 1rem;
-    }
-
-    h2.fw-800 {
-        font-size: 1.3rem;
-    }
+/* Images */
+.hero-img-modern {
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    object-fit: cover;
 }
