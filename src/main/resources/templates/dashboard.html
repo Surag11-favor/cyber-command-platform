@@ -66,7 +66,7 @@
             <div class="position-absolute bottom-0 start-0 w-100 p-4">
                 <div class="glass-card p-3 mb-4">
                     <div class="d-flex align-items-center gap-3">
-                        <div class="avatar-box" th:text="${#strings.substring(#authentication.name, 0, 1).toUpperCase()}">S</div>
+                        <div class="avatar-box" th:text="${#authentication.name != null and #strings.length(#authentication.name) > 0 ? #strings.substring(#authentication.name, 0, 1).toUpperCase() : 'U'}">S</div>
                         <div class="overflow-hidden">
                             <div class="text-white small fw-700 text-truncate" sec:authentication="name">SYS_ADMIN</div>
                             <div class="extra-small text-muted fw-600">PREMIUM_LAYER</div>
@@ -187,7 +187,7 @@
                                                 <span class="text-white fw-700" th:text="${log.performedBy}">SYSTEM</span>
                                             </div>
                                         </td>
-                                        <td class="mono small text-muted">[[${#strings.toUpperCase(#strings.substring(log.action,0,12))}]]...</td>
+                                        <td class="mono small text-muted text-uppercase" th:text="${#strings.abbreviate(log.action, 15)}">ACTION...</td>
                                         <td><span class="badge-status status-active">SECURE</span></td>
                                     </tr>
                                     <tr th:if="${#lists.isEmpty(recentLogs)}">
