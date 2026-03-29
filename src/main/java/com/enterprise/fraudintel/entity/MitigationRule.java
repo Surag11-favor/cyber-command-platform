@@ -1,7 +1,6 @@
 package com.enterprise.fraudintel.entity;
 
 import jakarta.persistence.*;
-import jakarta.persistence.*;
 
 @Entity
 @Table(name = "mitigation_rules")

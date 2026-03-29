@@ -110,6 +110,7 @@
             padding: 4px;
             background: conic-gradient(var(--gauge-color) var(--gauge-pct), rgba(255,255,255,0.05) var(--gauge-pct));
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
         }
@@ -136,6 +137,11 @@
     </style>
 </head>
 <body class="fade-in">
+
+    <button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('open');">
+        <i class="bi bi-list"></i>
+    </button>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open');this.classList.remove('open');"></div>
 
     <div class="app-wrapper">
         <!-- Sidebar -->

@@ -43,6 +43,11 @@
 </head>
 <body class="fade-in">
 
+    <button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('open');">
+        <i class="bi bi-list"></i>
+    </button>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open');this.classList.remove('open');"></div>
+
     <div class="app-wrapper">
         <!-- Sidebar -->
         <aside class="sidebar">
@@ -100,7 +105,7 @@
                                         <div class="pulse-active" style="width: 6px; height: 6px;"></div>
                                         <h5 class="fw-800 text-white m-0" th:text="${log.action}">SCAN_EXECUTED</h5>
                                     </div>
-                                    <div class="mono small text-muted">VECTOR: [[${log.details} != null ? ${log.details} : 'N/A']]</div>
+                                    <div class="mono small text-muted">VECTOR: <span th:text="${log.details != null ? log.details : 'N/A'}">N/A</span></div>
                                 </div>
                                 <div class="text-end">
                                     <div class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-2 py-1 mb-1 fw-700 font-monospace small"

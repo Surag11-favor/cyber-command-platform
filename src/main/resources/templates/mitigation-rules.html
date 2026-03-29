@@ -10,6 +10,11 @@
 </head>
 <body class="fade-in">
 
+    <button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('open');">
+        <i class="bi bi-list"></i>
+    </button>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open');this.classList.remove('open');"></div>
+
     <div class="app-wrapper">
         <!-- Sidebar -->
         <aside class="sidebar">

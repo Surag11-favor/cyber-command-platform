@@ -5,10 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.springframework.scheduling.annotation.EnableScheduling;
-
 @SpringBootApplication
-@EnableScheduling
 public class EnterpriseFraudApplication {
     public static void main(String[] args) {
         // Cloud Protocol Bridge: Handle Heroku/Railway DATABASE_URL format

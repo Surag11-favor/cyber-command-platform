@@ -47,6 +47,11 @@
 </head>
 <body class="fade-in">
 
+    <button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('open');">
+        <i class="bi bi-list"></i>
+    </button>
+    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open');this.classList.remove('open');"></div>
+
     <div class="app-wrapper">
         <!-- Premium Sidebar -->
         <aside class="sidebar">
@@ -125,7 +130,7 @@
                 <div class="col-xl-3 col-md-6">
                     <div class="glass-card stat-widget" style="border-color: var(--accent-purple);">
                         <div class="stat-label">Neural Accuracy</div>
-                        <div class="stat-value gradient-text" style="-webkit-text-fill-color: initial; background: linear-gradient(135deg, white, var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">99.9%</div>
+                        <div class="stat-value gradient-text" style="background: linear-gradient(135deg, white, var(--accent-purple)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">99.9%</div>
                         <div class="stat-delta text-muted"><i class="bi bi-cpu"></i> Quantum Edge</div>
                     </div>
                 </div>

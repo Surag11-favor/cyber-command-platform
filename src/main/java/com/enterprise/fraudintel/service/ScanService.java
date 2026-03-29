@@ -5,9 +5,12 @@ import com.enterprise.fraudintel.entity.MitigationRule;
 import com.enterprise.fraudintel.repository.AuditLogRepository;
 import com.enterprise.fraudintel.repository.MitigationRuleRepository;
 import org.springframework.stereotype.Service;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Service
@@ -38,7 +41,6 @@ public class ScanService {
         "apple", "microsoft", "google", "dropbox", "spotify", "steam", "discord"
     );
 
-    // Typosquatting variants: common letter-to-number and letter swaps
     private static final Map<Character, List<Character>> TYPO_MAP = Map.ofEntries(
         Map.entry('a', List.of('4', '@')),
         Map.entry('e', List.of('3')),
@@ -62,6 +64,11 @@ public class ScanService {
         "selected", "reward", "airdrop", "earn money", "click here"
     );
 
+    // Aggressive timeouts to prevent hanging
+    private static final int CONNECT_TIMEOUT_MS = 3000;
+    private static final int READ_TIMEOUT_MS = 3000;
+    private static final int MAX_CONTENT_BYTES = 256_000; // 256KB max
+
     public Map<String, Object> analyzeUrl(String rawUrl) {
         if (rawUrl == null || rawUrl.trim().isEmpty()) {
             return buildResponse("LOW", 0.0, "Empty payload provided.", new ArrayList<>());
@@ -78,27 +85,26 @@ public class ScanService {
         for (String shortener : SHORTENER_DOMAINS) {
             if (url.contains(shortener)) {
                 isShortened = true;
-                totalScore += 30.0;  // Shorteners hide real destination — high suspicion
+                totalScore += 30.0;
                 findings.add("URL Shortener detected (" + shortener + ") — destination is masked");
                 break;
             }
         }
 
-        // 1.2 If shortened, try to follow redirects to get the real URL
+        // 1.2 Follow redirects for shortened URLs
         String resolvedUrl = url;
         if (isShortened) {
             String followed = followRedirects(url);
             if (followed != null && !followed.equals(url)) {
                 resolvedUrl = followed.toLowerCase();
                 findings.add("Redirect resolved to: " + (resolvedUrl.length() > 60 ? resolvedUrl.substring(0, 60) + "..." : resolvedUrl));
-                // Now analyze the REAL destination URL too
             } else {
                 totalScore += 20.0;
                 findings.add("Shortened URL redirect could NOT be resolved — high evasion risk");
             }
         }
 
-        // 1.3 Deceptive Keyword Heuristics (check both original and resolved URL)
+        // 1.3 Deceptive Keyword Heuristics
         Set<String> foundKeywords = new HashSet<>();
         for (String keyword : DECEPTIVE_KEYWORDS) {
             if (url.contains(keyword) || resolvedUrl.contains(keyword)) {
@@ -130,7 +136,6 @@ public class ScanService {
                 String[] parts = host.split("\\.");
                 String domain = parts.length >= 2 ? parts[parts.length - 2] : host;
                 String tld = parts.length >= 1 ? parts[parts.length - 1] : "";
-                String fullDomain = domain + "." + tld;
 
                 // 2.1 TLD Reputation
                 if (SUSPICIOUS_TLDS.contains(tld)) {
@@ -145,15 +150,13 @@ public class ScanService {
                     findings.add("High entropy domain (score: " + String.format("%.2f", domainEntropy) + ") — possible Domain Generation Algorithm");
                 }
 
-                // 2.3 TYPOSQUATTING DETECTION — the critical fix
+                // 2.3 Typosquatting Detection
                 for (String brand : SOCIAL_MEDIA_BRANDS) {
-                    // Exact match
                     if (host.contains(brand) && !host.equals(brand + ".com") && !host.equals("www." + brand + ".com")) {
                         totalScore += 35.0;
                         findings.add("Brand impersonation: \"" + brand + "\" found in non-official domain " + host);
                         break;
                     }
-                    // Typosquatting/Leetspeak match
                     if (isTyposquat(domain, brand) || isTyposquat(host, brand)) {
                         totalScore += 45.0;
                         findings.add("TYPOSQUATTING DETECTED: \"" + domain + "\" appears to impersonate \"" + brand + "\" using character substitution");
@@ -161,7 +164,7 @@ public class ScanService {
                     }
                 }
 
-                // 2.4 Subdomain depth (evasion technique)
+                // 2.4 Subdomain depth
                 if (parts.length > 3) {
                     totalScore += 12.0;
                     findings.add("Excessive subdomain depth (" + parts.length + " levels) — domain obfuscation");
@@ -173,7 +176,7 @@ public class ScanService {
                     findings.add("Direct IP hosting — bypasses DNS reputation systems");
                 }
 
-                // 2.6 Hyphen abuse in domain
+                // 2.6 Hyphen abuse
                 long hyphenCount = domain.chars().filter(c -> c == '-').count();
                 if (hyphenCount >= 2) {
                     totalScore += 15.0;
@@ -247,7 +250,7 @@ public class ScanService {
                         findings.add("Automatic redirect mechanism embedded in page");
                     }
 
-                    // 3.6 Social scam keywords in content
+                    // 3.6 Social scam keywords
                     long scamMatches = SOCIAL_SCAM_KEYWORDS.stream().filter(pageContent::contains).count();
                     if (scamMatches >= 3) {
                         totalScore += (8.0 * scamMatches);
@@ -276,7 +279,6 @@ public class ScanService {
                     }
 
                 } else {
-                    // Content couldn't be fetched
                     if (totalScore > 25) {
                         totalScore += 15.0;
                         findings.add("Target page unreachable — suspicious for already-flagged URL (possible evasion)");
@@ -316,18 +318,11 @@ public class ScanService {
         return buildResponse(riskLevel, finalScore, summaryText, findings);
     }
 
-    /**
-     * Typosquatting detection: Normalizes leetspeak/character substitutions
-     * and checks if the result matches a known brand.
-     * e.g., "faceb00k" → "facebook", "g00gle" → "google", "4mazon" → "amazon"
-     */
     private boolean isTyposquat(String suspect, String brand) {
         if (suspect == null || brand == null) return false;
         
-        // Remove hyphens and dots for comparison
         String cleaned = suspect.replace("-", "").replace(".", "");
         
-        // Normalize leetspeak: replace all substitution characters back to letters
         StringBuilder normalized = new StringBuilder();
         for (char c : cleaned.toCharArray()) {
             boolean replaced = false;
@@ -345,15 +340,12 @@ public class ScanService {
 
         String normalizedStr = normalized.toString();
 
-        // Check if normalized version contains or equals the brand
         if (normalizedStr.contains(brand)) return true;
 
-        // Check Levenshtein distance (allow 1-2 edits for typos like facebok, gooogle)
         if (brand.length() >= 5) {
             int distance = levenshteinDistance(normalizedStr, brand);
             if (distance <= 2 && distance > 0) return true;
             
-            // Also check if the cleaned (non-normalized) version is close
             int rawDistance = levenshteinDistance(cleaned, brand);
             if (rawDistance <= 2 && rawDistance > 0) return true;
         }
@@ -361,9 +353,6 @@ public class ScanService {
         return false;
     }
 
-    /**
-     * Levenshtein distance for typo detection
-     */
     private int levenshteinDistance(String a, String b) {
         int[][] dp = new int[a.length() + 1][b.length() + 1];
         for (int i = 0; i <= a.length(); i++) dp[i][0] = i;
@@ -378,19 +367,20 @@ public class ScanService {
     }
 
     /**
-     * Follow redirects on shortened URLs to discover the real destination
+     * Follow redirects with strict timeouts to prevent hanging.
      */
     private String followRedirects(String urlString) {
         try {
             String normalizedUrl = urlString.startsWith("http") ? urlString : "https://" + urlString;
             HttpURLConnection conn = (HttpURLConnection) URI.create(normalizedUrl).toURL().openConnection();
             conn.setRequestMethod("HEAD");
-            conn.setInstanceFollowRedirects(false); // Don't auto-follow — we want to see each hop
-            conn.setConnectTimeout(4000);
-            conn.setReadTimeout(4000);
+            conn.setInstanceFollowRedirects(false);
+            conn.setConnectTimeout(CONNECT_TIMEOUT_MS);
+            conn.setReadTimeout(READ_TIMEOUT_MS);
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
 
             int status = conn.getResponseCode();
+            conn.disconnect();
             if (status == 301 || status == 302 || status == 303 || status == 307 || status == 308) {
                 String location = conn.getHeaderField("Location");
                 if (location != null && !location.isEmpty()) {
@@ -403,25 +393,45 @@ public class ScanService {
         return null;
     }
 
+    /**
+     * Fetch page content with strict size and time limits to prevent hanging.
+     * Uses BufferedReader with a character limit instead of Scanner to avoid
+     * blocking on slow/infinite streams.
+     */
     private String fetchPageContent(String urlString) {
+        HttpURLConnection conn = null;
         try {
             String normalizedUrl = urlString.startsWith("http") ? urlString : "https://" + urlString;
-            HttpURLConnection conn = (HttpURLConnection) URI.create(normalizedUrl).toURL().openConnection();
+            conn = (HttpURLConnection) URI.create(normalizedUrl).toURL().openConnection();
             conn.setRequestMethod("GET");
-            conn.setConnectTimeout(5000);
-            conn.setReadTimeout(5000);
+            conn.setConnectTimeout(CONNECT_TIMEOUT_MS);
+            conn.setReadTimeout(READ_TIMEOUT_MS);
             conn.setInstanceFollowRedirects(true);
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Enterprise-Threat-Intel/1.0");
 
             if (conn.getResponseCode() == 200) {
-                try (Scanner scanner = new Scanner(conn.getInputStream()).useDelimiter("\\A")) {
-                    String content = scanner.hasNext() ? scanner.next().toLowerCase() : "";
-                    // Limit content to first 500KB to avoid memory issues
-                    return content.length() > 512000 ? content.substring(0, 512000) : content;
+                // Read with strict size limit using BufferedReader
+                try (BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+                    StringBuilder sb = new StringBuilder();
+                    char[] buffer = new char[8192];
+                    int charsRead;
+                    while ((charsRead = reader.read(buffer)) != -1) {
+                        sb.append(buffer, 0, charsRead);
+                        if (sb.length() >= MAX_CONTENT_BYTES) {
+                            break; // Stop reading — we have enough
+                        }
+                    }
+                    return sb.toString().toLowerCase();
                 }
             }
         } catch (Exception e) {
+            // Timeout or connection error — return null gracefully
             return null;
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
         }
         return null;
     }
