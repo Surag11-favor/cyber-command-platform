@@ -44,7 +44,7 @@ public class PageController {
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("scans", scanResultRepository.findAllByOrderByScanTimestampDesc());
+        model.addAttribute("scans", scanResultRepository.findAllByOrderByScanTimestampDesc().stream().limit(50).toList());
         return "index";
     }
 
@@ -63,7 +63,7 @@ public class PageController {
 
     @GetMapping("/threat-scan")
     public String threatScan(Model model) {
-        model.addAttribute("scans", scanResultRepository.findAllByOrderByScanTimestampDesc());
+        model.addAttribute("scans", scanResultRepository.findAllByOrderByScanTimestampDesc().stream().limit(50).toList());
         return "threat-scan";
     }
 
@@ -81,7 +81,7 @@ public class PageController {
 
     @GetMapping("/audit-logs")
     public String auditLogs(Model model) {
-        model.addAttribute("logs", auditLogRepository.findAllByOrderByTimestampDesc());
+        model.addAttribute("logs", auditLogRepository.findAllByOrderByTimestampDesc().stream().limit(100).toList());
         return "audit-logs";
     }
 

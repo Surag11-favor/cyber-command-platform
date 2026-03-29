@@ -185,14 +185,14 @@
                                 </thead>
                                 <tbody>
                                     <tr th:each="log : ${recentLogs}">
-                                        <td class="mono fw-600 text-white-50" th:text="${#temporals.format(log.timestamp, 'HH:mm:ss')}">12:00:00</td>
+                                        <td class="mono fw-600 text-white-50" th:text="${log.timestamp != null ? #temporals.format(log.timestamp, 'HH:mm:ss') : '--:--:--'}">12:00:00</td>
                                         <td>
                                             <div class="d-flex align-items-center gap-2">
                                                 <div class="pulse-active"></div>
                                                 <span class="text-white fw-700" th:text="${log.performedBy}">SYSTEM</span>
                                             </div>
                                         </td>
-                                        <td class="mono small text-muted text-uppercase" th:text="${#strings.abbreviate(log.action, 15)}">ACTION...</td>
+                                        <td class="mono small text-muted text-uppercase" th:text="${log.action != null ? (log.action.length() > 15 ? log.action.substring(0,12) + '...' : log.action) : 'N/A'}">ACTION...</td>
                                         <td><span class="badge-status status-active">SECURE</span></td>
                                     </tr>
                                     <tr th:if="${#lists.isEmpty(recentLogs)}">

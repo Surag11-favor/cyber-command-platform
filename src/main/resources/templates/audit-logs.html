@@ -78,7 +78,6 @@
                     <h2 class="fw-800 text-white m-0">Forensic Audit Trail</h2>
                     <p class="text-muted small">Immutable ledger of all platform interactions and vector modifications.</p>
                 </div>
-                <!-- Export button for premium feel -->
                 <button class="btn btn-outline border-white border-opacity-25 rounded-pill fs-6 px-4 py-2 text-white">
                     <i class="bi bi-download me-2"></i> EXPORT_LEDGER
                 </button>
@@ -86,13 +85,13 @@
 
             <div class="glass-card p-5">
                 
-                <div th:if="${#lists.isEmpty(logs)}" class="text-center py-5">
+                <div th:if="${logs == null or logs.isEmpty()}" class="text-center py-5">
                     <i class="bi bi-inbox text-muted display-1 mb-3 opacity-25"></i>
                     <h4 class="text-white fw-700">AWAITING_TELEMETRY</h4>
                     <p class="text-muted mono small">No forensic logs recorded in the current matrix.</p>
                 </div>
 
-                <div class="timeline" th:unless="${#lists.isEmpty(logs)}">
+                <div class="timeline" th:if="${logs != null and !logs.isEmpty()}">
                     
                     <div class="timeline-item" th:each="log : ${logs}">
                         <div class="timeline-dot">
@@ -103,19 +102,19 @@
                                 <div>
                                     <div class="d-flex align-items-center gap-2 mb-1">
                                         <div class="pulse-active" style="width: 6px; height: 6px;"></div>
-                                        <h5 class="fw-800 text-white m-0" th:text="${log.action}">SCAN_EXECUTED</h5>
+                                        <h5 class="fw-800 text-white m-0" th:text="${log.action != null ? log.action : 'UNKNOWN'}">SCAN_EXECUTED</h5>
                                     </div>
                                     <div class="mono small text-muted">VECTOR: <span th:text="${log.details != null ? log.details : 'N/A'}">N/A</span></div>
                                 </div>
                                 <div class="text-end">
                                     <div class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-2 py-1 mb-1 fw-700 font-monospace small"
-                                         th:text="${#temporals.format(log.timestamp, 'yyyy-MM-dd HH:mm:ss')}">2026-03-27</div>
+                                         th:text="${log.timestamp != null ? #temporals.format(log.timestamp, 'yyyy-MM-dd HH:mm:ss') : 'N/A'}">2026-03-27</div>
                                 </div>
                             </div>
                             
                             <div class="d-flex align-items-center gap-3 mt-3 pt-3 border-top border-white border-opacity-5">
-                                <div class="rounded-circle bg-secondary bg-opacity-25 text-white fw-800 d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 0.7rem;" th:text="${log.performedBy != null and #strings.length(log.performedBy) > 0 ? #strings.substring(log.performedBy,0,1).toUpperCase() : 'U'}">U</div>
-                                <span class="text-white-50 small fw-600">OPERATOR: <span class="text-white" th:text="${log.performedBy}">user</span></span>
+                                <div class="rounded-circle bg-secondary bg-opacity-25 text-white fw-800 d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 0.7rem;" th:text="${log.performedBy != null and log.performedBy.length() > 0 ? log.performedBy.substring(0,1).toUpperCase() : 'S'}">U</div>
+                                <span class="text-white-50 small fw-600">OPERATOR: <span class="text-white" th:text="${log.performedBy != null ? log.performedBy : 'SYSTEM'}">user</span></span>
                             </div>
                         </div>
                     </div>

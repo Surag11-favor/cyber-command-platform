@@ -313,7 +313,7 @@
                                 </thead>
                                 <tbody>
                                     <tr th:each="scan : ${scans}">
-                                        <td class="mono small text-muted" th:text="${#temporals.format(scan.scanTimestamp, 'yyyy-MM-dd HH:mm:ss')}">2023-01-01 12:00:00</td>
+                                        <td class="mono small text-muted" th:text="${scan.scanTimestamp != null ? #temporals.format(scan.scanTimestamp, 'yyyy-MM-dd HH:mm:ss') : 'N/A'}">2023-01-01 12:00:00</td>
                                         <td>
                                             <div class="d-flex align-items-center gap-3">
                                                 <i class="bi bi-link-45deg text-cyan"></i>
@@ -326,7 +326,7 @@
                                                     <div class="progress-bar" role="progressbar" 
                                                          th:style="'width: ' + ${scan.riskScore} + '%; background-color: ' + (${scan.riskLevel == 'HIGH' ? '#f43f5e' : (scan.riskLevel == 'MEDIUM' ? '#fbbf24' : '#10b981')})"></div>
                                                 </div>
-                                                <span class="mono small fw-800" th:text="${#numbers.formatDecimal(scan.riskScore, 1, 1)}">0.0</span>
+                                                <span class="mono small fw-800" th:text="${scan.riskScore != null ? #numbers.formatDecimal(scan.riskScore, 1, 1) : '0.0'}">0.0</span>
                                             </div>
                                         </td>
                                         <td>
