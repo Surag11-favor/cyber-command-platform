@@ -4,12 +4,8 @@ import urllib.request
 import json
 import os
 
-print("Starting MySQL...")
-mysql_proc = subprocess.Popen(["C:\\xampp\\mysql\\bin\\mysqld.exe", "--standalone", "--console"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-time.sleep(5)
-
 print("Starting Spring Boot App...")
-app_proc = subprocess.Popen(["C:\\Program Files\\Java\\jdk-25\\bin\\java.exe", "-jar", "target/fraud-intel-0.0.1-SNAPSHOT.jar"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+app_proc = subprocess.Popen(["C:\\Program Files\\Java\\jdk-25\\bin\\java.exe", "-jar", "target/cyber-command-0.0.1-SNAPSHOT.jar"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 time.sleep(15)
 
 print("Testing API...")
@@ -33,4 +29,3 @@ with open("final_result_yt.txt", "w") as f:
 
 print("Cleaning up...")
 app_proc.terminate()
-mysql_proc.terminate()
