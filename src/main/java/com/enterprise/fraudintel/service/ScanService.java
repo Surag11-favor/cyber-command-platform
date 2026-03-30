@@ -28,39 +28,6 @@ public class ScanService {
         this.auditLogRepository = auditLogRepository;
     }
 
-    private static final Set<String> SUSPICIOUS_TLDS = Set.of(
-        "xyz", "top", "tk", "ml", "ga", "cf", "gq", "bid", "pw", "buzz",
-        "click", "rest", "cam", "icu", "work", "live", "su", "cc", "ws", "info",
-        "cn", "ru", "online", "site", "fun", "space", "monster", "hair", "cfd",
-        "loan", "download", "racing", "win", "review", "stream", "gdn", "mobi",
-        "party", "date", "trade", "webcam", "science", "accountant", "faith",
-        "zip", "mov", "bond", "sbs", "autos", "quest"
-    );
-
-    private static final Set<String> SOCIAL_MEDIA_BRANDS = Set.of(
-        "facebook", "twitter", "instagram", "tiktok", "linkedin", "snapchat",
-        "youtube", "whatsapp", "telegram", "paypal", "netflix", "amazon",
-        "apple", "microsoft", "google", "dropbox", "spotify", "steam", "discord",
-        "chase", "wellsfargo", "bankofamerica", "citibank", "usaa", "venmo",
-        "cashapp", "zelle", "coinbase", "binance", "github", "reddit",
-        "outlook", "hotmail", "yahoo", "icloud", "metamask", "opensea",
-        "walmart", "ebay", "alibaba", "dhl", "fedex", "ups", "usps"
-    );
-
-
-    private static final Set<String> SUSPICIOUS_URL_KEYWORDS = Set.of(
-        "login", "verify", "account", "secure", "update", "confirm", "banking",
-        "signin", "sign-in", "auth", "password", "credential", "suspended",
-        "unlock", "validate", "restore", "recover", "identity", "billing",
-        "wallet", "payment", "invoice", "refund", "claim", "reward", "prize",
-        "winner", "alert", "urgent", "expire", "limited", "offer", "free",
-        "bonus", "gift", "coupon", "promo", "deal", "discount", "token",
-        "airdrop", "nft", "crypto", "blockchain", "web3", "connect-wallet",
-        "verification", "authenticate", "reactivate", "reauthenticate",
-        "security-check", "confirm-identity", "reset-password", "unusual-activity",
-        "verify-account", "update-billing", "payment-method", "submit-documents"
-    );
-
     private static final Set<String> HEURISTIC_PATTERNS = Set.of(
         "atob\\(", "eval\\(", "unescape\\(", "String\\.fromCharCode", "fromCharCode",
         "\\\\x[0-9a-fA-F]{2}", "0x[0-9a-fA-F]{2}", // Hex obfuscation
@@ -145,8 +112,8 @@ public class ScanService {
                     for (Path file : sourceFiles) {
                         try {
                             String content = Files.readString(file).toLowerCase();
-                            for (String pat : SUSPICIOUS_CODE_PATTERNS) {
-                                if (content.contains(pat)) {
+                            for (String pat : HEURISTIC_PATTERNS) {
+                                if (content.matches(".*" + pat + ".*")) {
                                     totalScore += 5.0;
                                     p2Findings.add("✗ MALICIOUS VECTOR ['" + pat + "'] in " + file.getFileName());
                                     break;
