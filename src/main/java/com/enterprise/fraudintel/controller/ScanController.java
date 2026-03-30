@@ -56,7 +56,13 @@ public class ScanController {
             AuditLog log = new AuditLog();
             log.setAction("DEEP_SCAN");
             log.setPerformedBy(principal != null ? principal.getName() : "Anonymous");
-            log.setDetails("Deep Scan: " + (payload.length() > 40 ? payload.substring(0, 40) + "..." : payload) + " | " + riskRating + " " + String.format("%.0f", threatScore) + "% | " + elapsed + "ms");
+            
+            // Detailed Global Intelligence breakdown for audit
+            String auditDetail = String.format("Global Intel Pulse: %s | Risk: %s (%s%%) | Duration: %dms | Findings: %d", 
+                payload, riskRating, String.format("%.0f", threatScore), elapsed, 
+                analysisResult.get("phases") != null ? ((List<?>)analysisResult.get("phases")).size() : 0);
+                
+            log.setDetails(auditDetail);
             auditLogRepository.save(log);
 
             Map<String, Object> response = new HashMap<>(analysisResult);
