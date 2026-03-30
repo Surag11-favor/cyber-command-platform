@@ -281,11 +281,13 @@
                 
                 // Slow down the experience to make it feel deep
                 setProgress(startPct, `BOOTING_MODULE: ${phase.name.toUpperCase()}...`);
-                await new Promise(r => setTimeout(r, 600));
+                await new Promise(r => setTimeout(r, 1800));
                 
                 addLog(`INJECTING_MODULE: ${phase.name}`, 'SCANNER:', 'text-primary fw-800');
+                await new Promise(r => setTimeout(r, 600));
                 
-                for (const finding of phase.findings) {
+                for (let fi = 0; fi < phase.findings.length; fi++) {
+                    const finding = phase.findings[fi];
                     let css = '';
                     let prefix = 'FOUND:';
                     if (finding.startsWith('✗')) { css = 'finding-critical'; prefix = 'THREAT:'; }
@@ -294,19 +296,19 @@
                     else if (finding.startsWith('○')) { css = 'text-white-50'; prefix = 'INFO:'; }
                     
                     addLog(finding, prefix, css);
-                    // Realistic typing/processing jitter
-                    await new Promise(r => setTimeout(r, 100 + Math.random() * 200));
+                    // Realistic typing/processing jitter — extended for deep scan feel
+                    await new Promise(r => setTimeout(r, 400 + Math.random() * 400));
                     
-                    const chunkPct = startPct + ((endPct - startPct) * (phase.findings.indexOf(finding) / phase.findings.length));
+                    const chunkPct = startPct + ((endPct - startPct) * (fi / phase.findings.length));
                     setProgress(chunkPct, `AUDITING: ${phase.name.toUpperCase()}...`);
                 }
                 
                 addLog(`MODULE_PHASE_COMPLETE: ${phase.name} (Duration: ${phase.durationMs}ms)`, 'SYSTEM:', 'text-muted x-small');
                 setProgress(endPct, `SYNCHRONIZING_CORE_STATE...`);
-                await new Promise(r => setTimeout(r, 400));
+                await new Promise(r => setTimeout(r, 1200));
             }
             setProgress(100, 'AUDIT_COMPLETE_GENERATING_INTEL_REPORT');
-            await new Promise(r => setTimeout(r, 800));
+            await new Promise(r => setTimeout(r, 1500));
         }
 
         scanForm.onsubmit = async (e) => {
@@ -321,7 +323,12 @@
             scanStatus.textContent = 'ANALYSIS_IN_PROGRESS';
             
             addLog(`Deep Audit initialized for Node: ${payload}`, 'CORE_SYS:');
+            await new Promise(r => setTimeout(r, 800));
             addLog(`Establishing secure heuristic tunnel...`, 'CORE_SYS:');
+            await new Promise(r => setTimeout(r, 1000));
+            addLog(`Loading threat intelligence database (v4.2.1)...`, 'CORE_SYS:');
+            await new Promise(r => setTimeout(r, 1200));
+            addLog(`Handshake complete. Commencing deep-packet analysis...`, 'CORE_SYS:', 'finding-safe');
             
             try {
                 // Pre-fetch API call while animating
@@ -333,7 +340,7 @@
 
                 // Start the heavy-duty animation
                 // We'll wait a bit to simulate real "deep" processing even before results arrive
-                await new Promise(r => setTimeout(r, 1500));
+                await new Promise(r => setTimeout(r, 2000));
                 
                 const res = await apiPromise;
                 if (!res.ok) throw new Error('Kernel communication fault: ' + res.status);

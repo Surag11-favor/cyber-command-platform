@@ -7,6 +7,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/vortex-primus.css}">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <style>
         /* Toggle Switch */
         .toggle-switch {
@@ -106,10 +108,10 @@
                             <tr th:each="rule : ${rules}" th:classappend="${!rule.enabled} ? 'rule-disabled' : ''">
                                 <!-- Toggle Switch -->
                                 <td>
-                                    <a th:href="@{/rules/toggle/{id}(id=${rule.id})}" class="toggle-switch" th:title="${rule.enabled ? 'Click to disable' : 'Click to enable'}">
-                                        <input type="checkbox" th:checked="${rule.enabled}" onclick="return false;">
+                                    <label class="toggle-switch" th:title="${rule.enabled ? 'Click to disable' : 'Click to enable'}" th:attr="onclick='toggleRule(' + ${rule.id} + ')'">
+                                        <input type="checkbox" th:checked="${rule.enabled}" readonly>
                                         <span class="toggle-slider"></span>
-                                    </a>
+                                    </label>
                                 </td>
                                 <td class="fw-700 text-white" th:text="${rule.name}">Default Rule</td>
                                 <td class="mono small text-muted" th:text="${rule.description}">pattern_match</td>
@@ -122,9 +124,9 @@
                                     <span th:if="${rule.action == 'FLAG'}" class="badge-status" style="background: rgba(59,130,246,0.1); color: #3b82f6; border: 1px solid rgba(59,130,246,0.2);" th:text="${rule.action}">FLAG</span>
                                 </td>
                                 <td>
-                                    <a th:href="@{/rules/delete/{id}(id=${rule.id})}" class="btn btn-outline-danger border-0 p-2 lh-1 text-danger" title="REVOKE RULE" onclick="return confirm('Revoke this defense protocol?');">
+                                    <button type="button" class="btn btn-outline-danger border-0 p-2 lh-1 text-danger" title="REVOKE RULE" th:attr="onclick='deleteRule(' + ${rule.id} + ')'">
                                         <i class="bi bi-x-octagon"></i>
-                                    </a>
+                                    </button>
                                 </td>
                             </tr>
                             <tr th:if="${rules == null or rules.isEmpty()}">
@@ -176,5 +178,42 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        async function toggleRule(id) {
+            try {
+                const res = await fetch('/api/rules/' + id + '/toggle', {
+                    method: 'POST',
+                    headers: { [csrfHeader]: csrfToken }
+                });
+                if (res.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Failed to toggle rule. Status: ' + res.status);
+                }
+            } catch (err) {
+                alert('Network error: ' + err.message);
+            }
+        }
+
+        async function deleteRule(id) {
+            if (!confirm('Revoke this defense protocol?')) return;
+            try {
+                const res = await fetch('/api/rules/' + id, {
+                    method: 'DELETE',
+                    headers: { [csrfHeader]: csrfToken }
+                });
+                if (res.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Failed to delete rule. Status: ' + res.status);
+                }
+            } catch (err) {
+                alert('Network error: ' + err.message);
+            }
+        }
+    </script>
 </body>
 </html>
